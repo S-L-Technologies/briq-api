@@ -5,10 +5,11 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from starlette.responses import StreamingResponse
+from starlette.responses import StreamingResponse, JSONResponse
 
 from briq_api.set_identifier import SetRID
 from briq_api.storage.file.backends.cloud_storage import NotFoundException
+from briq_api.indexer.storage import mongo_storage
 
 from .common import ExceptionWrapperRoute
 
@@ -108,6 +109,23 @@ async def model(chain_id: str, token_id: str, kind: str):
         "Cache-Control": f"public,max-age={3600 * 24}"
     })
 
+@router.head("/{chain_id}/gallery/static_data")
+@router.get("/{chain_id}/gallery/static_data")
+async def get_gallery_data(chain_id: str):
+    sets = mongo_storage.get_backend(chain_id).async_db['set_tokens'].find({}).sort("_timestamp", -1).limit(25)
+    
+    result = {}
+    for token_id in sets:
+        rid = SetRID(chain_id=chain_id, token_id=token_id)
+        set_data = await api.get_metadata(rid)
+        result[token_id] = {
+            x: set_data[x] for x in ['id', 'name', 'description', 'image', 'created_at', 'booklet_id', 'background_color'] if x in set_data
+        }
+        
+    return JSONResponse(result, headers={
+        "Cache-Control": f"public,max-age={24 * 3600}"
+    })
+    
 
 class StoreSetRequest(BaseModel):
     chain_id: str
