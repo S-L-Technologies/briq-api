@@ -46,6 +46,12 @@ def is_admin(request: Request):
             0x0246db469dFfb4A5309E2BEBbf8eEC6AeA477D30724924949F7619D9C52A5888,  # OutSmth Argent X
         ]:
             return
+    elif data['verified_network'] == StarknetChainId.SEPOLIA_TESTNET.value:
+        if data['verified_address'] in [
+            0x00f0fcC3bAD0943E01990650306343D49264b54c8041D11255427eE788E10f7F,  # Wraitii
+            0x0246db469dFfb4A5309E2BEBbf8eEC6AeA477D30724924949F7619D9C52A5888,  # OutSmth Argent X
+        ]:
+            return
     elif data['verified_network'] == StarknetChainId.MAINNET.value:
         if data['verified_address'] in [
             0x03ef5b02bcc5d30f3f0d35d55f365e6388fe9501eca216cb1596940bf41083e2,
