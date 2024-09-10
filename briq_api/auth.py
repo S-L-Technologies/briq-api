@@ -50,6 +50,7 @@ def is_admin(request: Request):
         if data['verified_address'] in [
             0x00f0fcC3bAD0943E01990650306343D49264b54c8041D11255427eE788E10f7F,  # Wraitii
             0x0246db469dFfb4A5309E2BEBbf8eEC6AeA477D30724924949F7619D9C52A5888,  # OutSmth Argent X
+            0x06ca32e5c90bb65eb79bdb689b72bdf05bfaac441f3212b46b52280804273e2c,  # TeddyNotBear (Bountive /  briq 2)
         ]:
             return
     elif data['verified_network'] == StarknetChainId.MAINNET.value:
